@@ -71,6 +71,7 @@ export function InventoryPage() {
           .includes(normalizedSearch),
       )
     : inventoryItems;
+  const sortedItems = [...filteredItems].sort((a, b) => b.id - a.id);
 
   async function handleRetry() {
     setIsLoading(true);
@@ -172,7 +173,7 @@ export function InventoryPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredItems.map((item) => (
+              {sortedItems.map((item) => (
                 <tr key={item.id} style={styles.tableRow}>
                   <td style={styles.codeCell}>{item.code || "—"}</td>
                   <td style={styles.productCell}>

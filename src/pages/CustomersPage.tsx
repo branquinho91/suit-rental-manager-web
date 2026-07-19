@@ -1,17 +1,21 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { CustomerDetailsModal } from "../components/modals/CustomerDetailsModal";
+import { NewCustomerModal } from "../components/modals/NewCustomerModal";
 import { GenericButton } from "../components/buttons/GenericButton";
 import { NewItemButton } from "../components/buttons/NewItemButton";
 import { CustomerCard } from "../components/cards/CustomerCard";
-import { getCustomers } from "../services/customerService";
-import type { Customer } from "../types/customer";
+import { createCustomer, getCustomers } from "../services/customerService";
+import type { CreateCustomerRequest, Customer } from "../types/customer";
 
 export function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [isNewCustomerModalOpen, setIsNewCustomerModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -41,6 +45,7 @@ export function CustomersPage() {
           .includes(normalizedSearch),
       )
     : customers;
+  const sortedCustomers = [...filteredCustomers].sort((a, b) => b.id - a.id);
 
   async function handleRetry() {
     setIsLoading(true);
@@ -52,6 +57,26 @@ export function CustomersPage() {
       setLoadError(getErrorMessage(error));
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  function handleOpenNewCustomerModal() {
+    setCreateError(null);
+    setIsNewCustomerModalOpen(true);
+  }
+
+  async function handleCreateCustomer(data: CreateCustomerRequest) {
+    setIsCreating(true);
+    setCreateError(null);
+
+    try {
+      await createCustomer(data);
+      setCustomers(await getCustomers());
+      setIsNewCustomerModalOpen(false);
+    } catch (error) {
+      setCreateError(getErrorMessage(error));
+    } finally {
+      setIsCreating(false);
     }
   }
 
@@ -67,7 +92,7 @@ export function CustomersPage() {
         <NewItemButton
           label="Novo cliente"
           disabled={isLoading}
-          onClick={() => alert("Implementar criação de cliente")}
+          onClick={handleOpenNewCustomerModal}
         />
       </header>
 
@@ -104,9 +129,9 @@ export function CustomersPage() {
             Tentar novamente
           </GenericButton>
         </div>
-      ) : filteredCustomers.length > 0 ? (
+      ) : sortedCustomers.length > 0 ? (
         <div style={styles.customerGrid}>
-          {filteredCustomers.map((customer) => (
+          {sortedCustomers.map((customer) => (
             <CustomerCard
               key={customer.id}
               customer={customer}
@@ -131,6 +156,15 @@ export function CustomersPage() {
         <CustomerDetailsModal
           customer={selectedCustomer}
           onClose={() => setSelectedCustomer(null)}
+        />
+      )}
+
+      {isNewCustomerModalOpen && (
+        <NewCustomerModal
+          isSubmitting={isCreating}
+          error={createError}
+          onClose={() => setIsNewCustomerModalOpen(false)}
+          onSubmit={handleCreateCustomer}
         />
       )}
     </section>

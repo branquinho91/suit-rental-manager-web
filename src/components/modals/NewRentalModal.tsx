@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useState,
-  type CSSProperties,
-  type FormEvent,
-  type MouseEvent,
-} from "react";
+import { useEffect, useState, type CSSProperties, type FormEvent, type MouseEvent } from "react";
 import type { Customer } from "../../types/customer";
 import type { InventoryItem } from "../../types/inventory";
 import type { CreateRentalRequest } from "../../types/rental";
@@ -190,9 +184,7 @@ export function NewRentalModal({
             <GenericButton
               type="submit"
               style={
-                isSubmitting || isFormInvalid
-                  ? styles.submitButtonDisabled
-                  : styles.submitButton
+                isSubmitting || isFormInvalid ? styles.submitButtonDisabled : styles.submitButton
               }
               disabled={isSubmitting || isFormInvalid}
             >

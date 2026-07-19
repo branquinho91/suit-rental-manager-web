@@ -14,3 +14,15 @@ export function createRental(data: CreateRentalRequest) {
     body: JSON.stringify(data),
   });
 }
+
+export function completeRental(id: number) {
+  return apiRequest<Rental>(`/rentals/${id}/complete`, {
+    method: "PATCH",
+  });
+}
+
+export function cancelRental(id: number) {
+  return apiRequest<Rental>(`/rentals/${id}/cancel`, {
+    method: "PATCH",
+  });
+}

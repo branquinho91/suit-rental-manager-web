@@ -1,18 +1,22 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { ProductDetailsModal } from "../components/modals/ProductDetailsModal";
+import { NewProductModal } from "../components/modals/NewProductModal";
 import { GenericButton } from "../components/buttons/GenericButton";
 import { NewItemButton } from "../components/buttons/NewItemButton";
 import { ProductCard } from "../components/cards/ProductCard";
-import { getProducts } from "../services/productService";
-import type { Product } from "../types/product";
+import { createProduct, getProducts } from "../services/productService";
+import type { CreateProductRequest, Product } from "../types/product";
 import { getProductTypeLabel } from "../utils/product";
 
 export function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isNewProductModalOpen, setIsNewProductModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -48,6 +52,7 @@ export function ProductsPage() {
           .includes(normalizedSearch),
       )
     : products;
+  const sortedProducts = [...filteredProducts].sort((a, b) => b.id - a.id);
 
   async function handleRetry() {
     setIsLoading(true);
@@ -59,6 +64,26 @@ export function ProductsPage() {
       setLoadError(getErrorMessage(error));
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  function handleOpenNewProductModal() {
+    setCreateError(null);
+    setIsNewProductModalOpen(true);
+  }
+
+  async function handleCreateProduct(data: CreateProductRequest) {
+    setIsCreating(true);
+    setCreateError(null);
+
+    try {
+      await createProduct(data);
+      setProducts(await getProducts());
+      setIsNewProductModalOpen(false);
+    } catch (error) {
+      setCreateError(getErrorMessage(error));
+    } finally {
+      setIsCreating(false);
     }
   }
 
@@ -76,7 +101,7 @@ export function ProductsPage() {
         <NewItemButton
           label="Novo produto"
           disabled={isLoading}
-          onClick={() => alert("Implementar criação de produto")}
+          onClick={handleOpenNewProductModal}
         />
       </header>
 
@@ -115,7 +140,7 @@ export function ProductsPage() {
         </div>
       ) : filteredProducts.length > 0 ? (
         <div style={styles.productGrid}>
-          {filteredProducts.map((product) => (
+          {sortedProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -140,6 +165,15 @@ export function ProductsPage() {
         <ProductDetailsModal
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
+        />
+      )}
+
+      {isNewProductModalOpen && (
+        <NewProductModal
+          isSubmitting={isCreating}
+          error={createError}
+          onClose={() => setIsNewProductModalOpen(false)}
+          onSubmit={handleCreateProduct}
         />
       )}
     </section>

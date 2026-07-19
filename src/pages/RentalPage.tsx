@@ -2,10 +2,11 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { GenericButton } from "../components/buttons/GenericButton";
 import { NewItemButton } from "../components/buttons/NewItemButton";
 import { NewRentalModal } from "../components/modals/NewRentalModal";
+import { RentalActionModal } from "../components/modals/CompleteRentalModal";
 import { RentalDetailsModal } from "../components/modals/RentalDetailsModal";
 import { getCustomers } from "../services/customerService";
 import { getInventoryItems } from "../services/inventoryService";
-import { createRental, getRentals } from "../services/rentalService";
+import { cancelRental, completeRental, createRental, getRentals } from "../services/rentalService";
 import type { Customer } from "../types/customer";
 import type { InventoryItem } from "../types/inventory";
 import type { CreateRentalRequest, Rental, RentalStatus } from "../types/rental";
@@ -34,11 +35,17 @@ export function RentalPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRental, setSelectedRental] = useState<Rental | null>(null);
+  const [rentalToComplete, setRentalToComplete] = useState<Rental | null>(null);
+  const [rentalToCancel, setRentalToCancel] = useState<Rental | null>(null);
   const [isNewRentalModalOpen, setIsNewRentalModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [completeError, setCompleteError] = useState<string | null>(null);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -65,9 +72,8 @@ export function RentalPage() {
 
   const availableItems = inventoryItems.filter((item) => item.status === "AVAILABLE");
   const normalizedSearch = searchTerm.trim().toLocaleLowerCase("pt-BR");
-  const orderedRentals = [...rentals].sort((first, second) => second.id - first.id);
   const filteredRentals = normalizedSearch
-    ? orderedRentals.filter((rental) =>
+    ? rentals.filter((rental) =>
         [
           rental.id.toString(),
           rental.customer.name,
@@ -85,7 +91,8 @@ export function RentalPage() {
           .toLocaleLowerCase("pt-BR")
           .includes(normalizedSearch),
       )
-    : orderedRentals;
+    : rentals;
+  const sortedRentals = [...filteredRentals].sort((a, b) => b.id - a.id);
 
   async function handleRetry() {
     setIsLoading(true);
@@ -126,6 +133,62 @@ export function RentalPage() {
       setCreateError(getErrorMessage(error));
     } finally {
       setIsCreating(false);
+    }
+  }
+
+  function handleOpenCompleteModal(rental: Rental) {
+    setCompleteError(null);
+    setRentalToComplete(rental);
+  }
+
+  async function handleCompleteRental() {
+    if (!rentalToComplete) return;
+
+    setIsCompleting(true);
+    setCompleteError(null);
+
+    try {
+      await completeRental(rentalToComplete.id);
+      const [refreshedRentals, refreshedInventory] = await Promise.all([
+        getRentals(),
+        getInventoryItems(),
+      ]);
+
+      setRentals(refreshedRentals);
+      setInventoryItems(refreshedInventory);
+      setRentalToComplete(null);
+    } catch (error) {
+      setCompleteError(getErrorMessage(error));
+    } finally {
+      setIsCompleting(false);
+    }
+  }
+
+  function handleOpenCancelModal(rental: Rental) {
+    setCancelError(null);
+    setRentalToCancel(rental);
+  }
+
+  async function handleCancelRental() {
+    if (!rentalToCancel) return;
+
+    setIsCancelling(true);
+    setCancelError(null);
+
+    try {
+      await cancelRental(rentalToCancel.id);
+      const [refreshedRentals, refreshedInventory] = await Promise.all([
+        getRentals(),
+        getInventoryItems(),
+      ]);
+
+      setRentals(refreshedRentals);
+      setInventoryItems(refreshedInventory);
+      setRentalToCancel(null);
+    } catch (error) {
+      setCancelError(getErrorMessage(error));
+    } finally {
+      setIsCancelling(false);
     }
   }
 
@@ -199,7 +262,7 @@ export function RentalPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredRentals.map((rental) => (
+              {sortedRentals.map((rental) => (
                 <tr key={rental.id} style={styles.tableRow}>
                   <td style={styles.idCell}>#{rental.id}</td>
                   <td style={styles.customerCell}>
@@ -216,12 +279,30 @@ export function RentalPage() {
                     <RentalStatusBadge status={rental.status} />
                   </td>
                   <td style={styles.actionsCell}>
-                    <GenericButton
-                      style={styles.detailsButton}
-                      onClick={() => setSelectedRental(rental)}
-                    >
-                      Ver detalhes
-                    </GenericButton>
+                    <div style={styles.actionButtons}>
+                      <GenericButton
+                        style={styles.detailsButton}
+                        onClick={() => setSelectedRental(rental)}
+                      >
+                        Ver detalhes
+                      </GenericButton>
+                      {rental.status === "ACTIVE" && (
+                        <>
+                          <GenericButton
+                            style={styles.completeButton}
+                            onClick={() => handleOpenCompleteModal(rental)}
+                          >
+                            Registrar devolução
+                          </GenericButton>
+                          <GenericButton
+                            style={styles.cancelRentalButton}
+                            onClick={() => handleOpenCancelModal(rental)}
+                          >
+                            Cancelar locação
+                          </GenericButton>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -255,6 +336,28 @@ export function RentalPage() {
         <RentalDetailsModal
           rental={selectedRental}
           onClose={() => setSelectedRental(null)}
+        />
+      )}
+
+      {rentalToComplete && (
+        <RentalActionModal
+          rental={rentalToComplete}
+          action="complete"
+          isSubmitting={isCompleting}
+          error={completeError}
+          onClose={() => setRentalToComplete(null)}
+          onConfirm={handleCompleteRental}
+        />
+      )}
+
+      {rentalToCancel && (
+        <RentalActionModal
+          rental={rentalToCancel}
+          action="cancel"
+          isSubmitting={isCancelling}
+          error={cancelError}
+          onClose={() => setRentalToCancel(null)}
+          onConfirm={handleCancelRental}
         />
       )}
     </section>
@@ -444,6 +547,12 @@ const styles = {
     textAlign: "right",
     whiteSpace: "nowrap",
   },
+  actionButtons: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: "0.5rem",
+  },
   statusBadge: {
     display: "inline-flex",
     padding: "0.28rem 0.58rem",
@@ -459,6 +568,22 @@ const styles = {
     borderColor: "#cbd5e1",
     backgroundColor: "#ffffff",
     color: "#0f172a",
+    fontSize: "0.76rem",
+  },
+  completeButton: {
+    minHeight: "auto",
+    padding: "0.5rem 0.7rem",
+    borderColor: "#166534",
+    backgroundColor: "#166534",
+    color: "#ffffff",
+    fontSize: "0.76rem",
+  },
+  cancelRentalButton: {
+    minHeight: "auto",
+    padding: "0.5rem 0.7rem",
+    borderColor: "#b91c1c",
+    backgroundColor: "#ffffff",
+    color: "#b91c1c",
     fontSize: "0.76rem",
   },
   pageState: {
