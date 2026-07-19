@@ -3,7 +3,7 @@ const apiBaseUrl = (import.meta.env.VITE_API_URL ?? "/api").replace(/\/$/, "");
 export async function apiRequest<T>(path: string, options?: RequestInit): Promise<T> {
   const headers = new Headers(options?.headers);
 
-  if (apiBaseUrl.includes("ngrok-free.app")) {
+  if (apiBaseUrl.includes(".ngrok-free.")) {
     headers.set("ngrok-skip-browser-warning", "true");
   }
 
