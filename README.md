@@ -1,7 +1,7 @@
 # 👔 Suit Rental Manager Web
 
 <p align="center">
-  Dashboard web para gerenciar clientes, produtos, estoque físico e locações de trajes sociais.
+  A web dashboard for managing customers, products, physical inventory, and formalwear rentals.
 </p>
 
 <p align="center">
@@ -12,105 +12,105 @@
 </p>
 
 <p align="center">
-  <a href="https://suit-rental-manager-web.vercel.app"><strong>🌐 Acessar aplicação</strong></a>
+  <a href="https://suit-rental-manager-web.vercel.app"><strong>🌐 Open live app</strong></a>
   &nbsp;•&nbsp;
-  <a href="https://github.com/branquinho91/suit-rental-manager-api"><strong>⚙️ Ver API</strong></a>
+  <a href="https://github.com/branquinho91/suit-rental-manager-api"><strong>⚙️ View API</strong></a>
 </p>
 
 <p align="center">
-  <a href="#-sobre-o-projeto">Sobre</a> •
-  <a href="#-funcionalidades">Funcionalidades</a> •
-  <a href="#%EF%B8%8F-tecnologias">Tecnologias</a> •
-  <a href="#-executando-localmente">Como executar</a> •
-  <a href="#-integração-com-a-api">Integração</a>
+  <a href="#-about-the-project">About</a> •
+  <a href="#-features">Features</a> •
+  <a href="#%EF%B8%8F-tech-stack">Tech stack</a> •
+  <a href="#-getting-started">Getting started</a> •
+  <a href="#-api-integration">Integration</a>
 </p>
 
-## ✨ Sobre o projeto
+## ✨ About the project
 
-O **Suit Rental Manager** é um sistema full stack criado para simplificar a operação diária de lojas de aluguel de roupas sociais. Esta aplicação é a interface web do sistema e concentra, em um único painel, o cadastro de clientes e produtos, o controle individual das peças e o acompanhamento das locações.
+**Suit Rental Manager** is a full-stack system designed to simplify the day-to-day operations of formalwear rental businesses. This application is the system's web interface, bringing customer and product registration, individual inventory control, and rental tracking together in a single dashboard.
 
-O ecossistema é dividido em dois repositórios:
+The ecosystem is split into two repositories:
 
-| Projeto | Repositório                                                                        | Responsabilidade                                 |
-| ------- | ---------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **Web** | [suit-rental-manager-web](https://github.com/branquinho91/suit-rental-manager-web) | Interface e experiência do usuário em React      |
-| **API** | [suit-rental-manager-api](https://github.com/branquinho91/suit-rental-manager-api) | Regras de negócio, persistência e endpoints REST |
+| Project | Repository | Responsibility |
+| --- | --- | --- |
+| **Web** | [suit-rental-manager-web](https://github.com/branquinho91/suit-rental-manager-web) | User interface and experience built with React |
+| **API** | [suit-rental-manager-api](https://github.com/branquinho91/suit-rental-manager-api) | Business rules, persistence, and REST endpoints |
 
-> A versão publicada está disponível em [suit-rental-manager-web.vercel.app](https://suit-rental-manager-web.vercel.app).
+> The live application is available at [suit-rental-manager-web.vercel.app](https://suit-rental-manager-web.vercel.app).
 
-## 🚀 Funcionalidades
+## 🚀 Features
 
-- **Clientes** — cadastro e busca por nome, CPF, e-mail, telefone ou cidade.
-- **Produtos** — catálogo com tipo, marca, tamanho, cor, preço e observações.
-- **Estoque** — inclusão de peças físicas, códigos individuais e acompanhamento de disponibilidade.
-- **Locações** — criação de locações com um ou mais itens e visualização dos detalhes.
-- **Ciclo da locação** — conclusão ou cancelamento de locações ativas.
-- **Busca rápida** — filtros específicos nas telas de clientes, produtos, estoque e locações.
-- **Feedback visual** — estados de carregamento, erro, lista vazia e nenhum resultado encontrado.
-- **Navegação SPA** — rotas no cliente com suporte a acesso direto quando publicada na Vercel.
+- **Customers** — registration and search by name, CPF, email, phone number, or city.
+- **Products** — catalog with type, brand, size, color, price, and notes.
+- **Inventory** — registration of physical items, individual codes, and availability tracking.
+- **Rentals** — create rentals with one or more items and inspect their details.
+- **Rental lifecycle** — complete or cancel active rentals.
+- **Quick search** — dedicated filters on the customers, products, inventory, and rentals screens.
+- **Visual feedback** — loading, error, empty-list, and no-results states throughout the app.
+- **SPA navigation** — client-side routing with support for direct access when deployed to Vercel.
 
-## 🛠️ Tecnologias
+## 🛠️ Tech stack
 
-| Tecnologia                                      | Uso no projeto                                  |
-| ----------------------------------------------- | ----------------------------------------------- |
-| [React 19](https://react.dev/)                  | Construção da interface por componentes         |
-| [TypeScript 6](https://www.typescriptlang.org/) | Tipagem estática e segurança no desenvolvimento |
-| [Vite 8](https://vite.dev/)                     | Servidor de desenvolvimento e build de produção |
-| [React Router 7](https://reactrouter.com/)      | Navegação entre as telas da aplicação           |
-| [ESLint](https://eslint.org/)                   | Qualidade e padronização do código              |
-| [Vercel](https://vercel.com/)                   | Hospedagem da aplicação web                     |
+| Technology | Purpose |
+| --- | --- |
+| [React 19](https://react.dev/) | Component-based user interface |
+| [TypeScript 6](https://www.typescriptlang.org/) | Static typing and safer development |
+| [Vite 8](https://vite.dev/) | Development server and production build |
+| [React Router 7](https://reactrouter.com/) | Navigation between application screens |
+| [ESLint](https://eslint.org/) | Code quality and consistency |
+| [Vercel](https://vercel.com/) | Web application hosting |
 
-## 🧩 Arquitetura
+## 🧩 Architecture
 
 ```mermaid
 flowchart LR
-    USER[Usuário] --> WEB[React Web App]
+    USER[User] --> WEB[React Web App]
     WEB -->|HTTP / JSON| API[Spring Boot API]
     API --> DB[(PostgreSQL)]
 ```
 
-No frontend, as responsabilidades estão separadas entre páginas, componentes reutilizáveis, serviços de integração, tipos e funções utilitárias.
+On the frontend, responsibilities are separated into pages, reusable components, integration services, types, and utility functions.
 
-## 🏁 Executando localmente
+## 🏁 Getting started
 
-### Pré-requisitos
+### Prerequisites
 
-- [Node.js](https://nodejs.org/) em uma versão LTS atual
+- [Node.js](https://nodejs.org/) on a current LTS release
 - [npm](https://www.npmjs.com/)
-- [Suit Rental Manager API](https://github.com/branquinho91/suit-rental-manager-api) em execução
+- [Suit Rental Manager API](https://github.com/branquinho91/suit-rental-manager-api) running locally or remotely
 
-### 1. Clone o projeto
+### 1. Clone the project
 
 ```bash
 git clone https://github.com/branquinho91/suit-rental-manager-web.git
 cd suit-rental-manager-web
 ```
 
-### 2. Instale as dependências
+### 2. Install the dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Inicie a API
+### 3. Start the API
 
-Siga as instruções do [repositório da API](https://github.com/branquinho91/suit-rental-manager-api) e mantenha o backend ativo em `http://localhost:8080`.
+Follow the instructions in the [API repository](https://github.com/branquinho91/suit-rental-manager-api) and keep the backend running at `http://localhost:8080`.
 
-### 4. Inicie o frontend
+### 4. Start the frontend
 
 ```bash
 npm run dev
 ```
 
-Acesse o endereço local exibido pelo Vite no terminal.
+Open the local address displayed by Vite in your terminal.
 
-## 🔌 Integração com a API
+## 🔌 API integration
 
-As requisições utilizam a URL definida em `VITE_API_URL`. Quando essa variável não existe, a aplicação usa `/api` e o proxy de desenvolvimento do Vite encaminha as chamadas para `http://localhost:8080`.
+Requests use the URL defined in `VITE_API_URL`. When this variable is not set, the application uses `/api`, and Vite's development proxy forwards calls to `http://localhost:8080`.
 
-### Desenvolvimento local
+### Local development
 
-Com a API executando na porta `8080`, não é necessário criar um arquivo `.env`:
+With the API running on port `8080`, you do not need to create an `.env` file:
 
 ```text
 Frontend  http://localhost:5173
@@ -118,107 +118,107 @@ Frontend  http://localhost:5173
     └── /api/*  ──proxy──▶  http://localhost:8080/*
 ```
 
-### API remota
+### Remote API
 
-Copie o arquivo de exemplo para `.env`:
+Copy the example environment file to `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Informe a URL pública da API:
+Set the public API URL:
 
 ```env
-VITE_API_URL=https://sua-api.exemplo.com
+VITE_API_URL=https://your-api.example.com
 ```
 
 > [!IMPORTANT]
-> Não adicione uma barra no final de `VITE_API_URL`. Em produção, a origem do frontend também precisa estar liberada na configuração de CORS da API.
+> Do not add a trailing slash to `VITE_API_URL`. In production, the frontend origin must also be allowed by the API's CORS configuration.
 
-Quando a URL pertence ao ngrok, o cliente adiciona automaticamente o cabeçalho necessário para ignorar a página de aviso do serviço.
+When the URL belongs to ngrok, the client automatically adds the header required to skip the service's browser warning page.
 
-### Endpoints consumidos
+### Consumed endpoints
 
-| Método  | Endpoint                 | Uso na interface             |
-| ------- | ------------------------ | ---------------------------- |
-| `GET`   | `/customers`             | Lista os clientes            |
-| `POST`  | `/customers`             | Cadastra um cliente          |
-| `GET`   | `/products`              | Lista os produtos            |
-| `POST`  | `/products`              | Cadastra um produto          |
-| `GET`   | `/inventory-items`       | Lista as peças do estoque    |
-| `POST`  | `/inventory-items`       | Adiciona uma peça ao estoque |
-| `GET`   | `/rentals`               | Lista as locações            |
-| `POST`  | `/rentals`               | Cria uma locação             |
-| `PATCH` | `/rentals/{id}/complete` | Conclui uma locação          |
-| `PATCH` | `/rentals/{id}/cancel`   | Cancela uma locação          |
+| Method | Endpoint | Usage in the interface |
+| --- | --- | --- |
+| `GET` | `/customers` | Lists customers |
+| `POST` | `/customers` | Creates a customer |
+| `GET` | `/products` | Lists products |
+| `POST` | `/products` | Creates a product |
+| `GET` | `/inventory-items` | Lists inventory items |
+| `POST` | `/inventory-items` | Adds an inventory item |
+| `GET` | `/rentals` | Lists rentals |
+| `POST` | `/rentals` | Creates a rental |
+| `PATCH` | `/rentals/{id}/complete` | Completes a rental |
+| `PATCH` | `/rentals/{id}/cancel` | Cancels a rental |
 
-A documentação completa do backend está disponível no [README da API](https://github.com/branquinho91/suit-rental-manager-api#readme). Com a API local em execução, também é possível consultar o [Swagger UI](http://localhost:8080/swagger-ui.html).
+The complete backend documentation is available in the [API README](https://github.com/branquinho91/suit-rental-manager-api#readme). With the API running locally, you can also browse its [Swagger UI](http://localhost:8080/swagger-ui.html).
 
-## 📜 Scripts disponíveis
+## 📜 Available scripts
 
-| Comando           | Descrição                                    |
-| ----------------- | -------------------------------------------- |
-| `npm run dev`     | Inicia o servidor de desenvolvimento do Vite |
-| `npm run build`   | Verifica os tipos e gera o build de produção |
-| `npm run lint`    | Executa o ESLint em todo o projeto           |
-| `npm run preview` | Serve o build de produção localmente         |
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the Vite development server |
+| `npm run build` | Type-checks the project and creates a production build |
+| `npm run lint` | Runs ESLint across the project |
+| `npm run preview` | Serves the production build locally |
 
-## 📁 Estrutura do projeto
+## 📁 Project structure
 
 ```text
 suit-rental-manager-web/
-├── public/                 # Arquivos públicos
+├── public/                 # Public assets
 ├── src/
-│   ├── components/        # UI compartilhada, cards, botões e modais
-│   ├── img/               # Imagens da aplicação
-│   ├── pages/             # Telas principais
-│   ├── services/          # Cliente HTTP e serviços por domínio
-│   ├── types/             # Tipos de domínio e contratos da API
-│   ├── utils/             # Formatação e funções auxiliares
-│   ├── App.tsx            # Layout e configuração das rotas
-│   ├── index.css          # Estilos globais
-│   └── main.tsx           # Ponto de entrada da aplicação
-├── .env.example           # Exemplo de configuração da API
-├── vercel.json            # Rotas SPA e cabeçalhos de segurança
-└── vite.config.ts         # Configuração do Vite e proxy local
+│   ├── components/        # Shared UI, cards, buttons, and modals
+│   ├── img/               # Application images
+│   ├── pages/             # Main application screens
+│   ├── services/          # HTTP client and domain services
+│   ├── types/             # Domain types and API contracts
+│   ├── utils/             # Formatting and helper functions
+│   ├── App.tsx            # Layout and route configuration
+│   ├── index.css          # Global styles
+│   └── main.tsx           # Application entry point
+├── .env.example           # API configuration example
+├── vercel.json            # SPA routing and security headers
+└── vite.config.ts         # Vite and local proxy configuration
 ```
 
-## 🧭 Rotas da aplicação
+## 🧭 Application routes
 
-| Rota         | Tela                 |
-| ------------ | -------------------- |
-| `/`          | Página inicial       |
-| `/customers` | Gestão de clientes   |
-| `/products`  | Catálogo de produtos |
-| `/inventory` | Controle de estoque  |
-| `/rentals`   | Gestão de locações   |
+| Route | Screen |
+| --- | --- |
+| `/` | Home page |
+| `/customers` | Customer management |
+| `/products` | Product catalog |
+| `/inventory` | Inventory control |
+| `/rentals` | Rental management |
 
-## 📦 Build e deploy
+## 📦 Build and deployment
 
-Gere uma versão otimizada para produção:
+Create an optimized production build:
 
 ```bash
 npm run build
 ```
 
-Os arquivos serão criados em `dist/`. Para conferir o resultado localmente:
+The generated files will be available in `dist/`. To inspect the result locally:
 
 ```bash
 npm run preview
 ```
 
-O arquivo `vercel.json` redireciona as rotas da aplicação para `index.html`, permitindo que URLs gerenciadas pelo React Router funcionem corretamente na Vercel. No ambiente de produção, configure `VITE_API_URL` com o endereço público do backend.
+The included `vercel.json` redirects application routes to `index.html`, allowing URLs managed by React Router to work correctly on Vercel. In the production environment, set `VITE_API_URL` to the backend's public address.
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-1. Faça um fork do projeto.
-2. Crie uma branch: `git checkout -b feature/minha-feature`.
-3. Faça o commit: `git commit -m "feat: adiciona minha feature"`.
-4. Envie a branch: `git push origin feature/minha-feature`.
-5. Abra um Pull Request.
+1. Fork the project.
+2. Create a branch: `git checkout -b feature/your-feature`.
+3. Commit your changes: `git commit -m "feat: add your feature"`.
+4. Push the branch: `git push origin feature/your-feature`.
+5. Open a Pull Request.
 
 ---
 
 <p align="center">
-  Desenvolvido para transformar a rotina de locação em um fluxo simples, rastreável e organizado. ✨
+  Built to turn rental operations into a simple, traceable, and organized workflow. ✨
 </p>
